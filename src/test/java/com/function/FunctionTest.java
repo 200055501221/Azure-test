@@ -133,6 +133,8 @@ public class FunctionTest {
         final HttpResponseMessage.Builder responseBuilder = mock(HttpResponseMessage.Builder.class);
         doReturn(responseBuilder).when(req).createResponseBuilder(HttpStatus.BAD_REQUEST);
         doReturn(responseBuilder).when(responseBuilder).body(any());
+        doReturn(responseBuilder).when(responseBuilder).header(anyString(), anyString());
+
 
         // Create mock response
         final HttpResponseMessage response = mock(HttpResponseMessage.class);
@@ -173,6 +175,8 @@ public class FunctionTest {
         final HttpResponseMessage.Builder responseBuilder = mock(HttpResponseMessage.Builder.class);
         doReturn(responseBuilder).when(req).createResponseBuilder(HttpStatus.BAD_REQUEST);
         doReturn(responseBuilder).when(responseBuilder).body(any());
+        doReturn(responseBuilder).when(responseBuilder).header(anyString(), anyString());
+
 
         // Create mock response
         final HttpResponseMessage response = mock(HttpResponseMessage.class);
@@ -213,6 +217,8 @@ public class FunctionTest {
         final HttpResponseMessage.Builder responseBuilder = mock(HttpResponseMessage.Builder.class);
         doReturn(responseBuilder).when(req).createResponseBuilder(HttpStatus.BAD_REQUEST);
         doReturn(responseBuilder).when(responseBuilder).body(any());
+        doReturn(responseBuilder).when(responseBuilder).header(anyString(), anyString());
+
 
         // Create mock response
         final HttpResponseMessage response = mock(HttpResponseMessage.class);
