@@ -5,6 +5,9 @@ import com.microsoft.azure.functions.annotation.*;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.JsonNode;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.Optional;
 
 /**
@@ -38,16 +41,47 @@ public class Function {
 
             JsonNode jsonNode = objectMapper.readTree(requestBody.get());
 
-            String firstName = jsonNode.has("firstName") ? jsonNode.get("firstName").asText() : null;
-            String lastName = jsonNode.has("lastName") ? jsonNode.get("lastName").asText() : null;
+                String firstName = jsonNode.has("firstName") ? jsonNode.get("firstName").asText() : null;
+                String lastName = jsonNode.has("lastName") ? jsonNode.get("lastName").asText() : null;
 
-            if (firstName == null || lastName == null || firstName.isEmpty() || lastName.isEmpty()) {
-                String errorResponse = "{\"StatusCode\":-1,\"Message\":\"Unsuccessful\"}";
+                // Validate presence
+                if (firstName == null || lastName == null || firstName.isEmpty() || lastName.isEmpty()) {
+                String errorResponse = "{\"StatusCode\":-1,\"Message\":\"Unsuccessful: Missing fields\"}";
                 return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
                         .header("Content-Type", "application/json")
                         .body(errorResponse)
                         .build();
-            }
+                }
+
+                // Validate content: must contain only letters
+                if (!firstName.matches("[a-zA-Z]+") || !lastName.matches("[a-zA-Z]+")) {
+                String errorResponse = "{\"StatusCode\":-1,\"Message\":\"Unsuccessful: Invalid characters in names\"}";
+                return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
+                        .header("Content-Type", "application/json")
+                        .body(errorResponse)
+                        .build();
+                }
+
+                try (Connection conn = DatabaseUtil.getConnection()) {
+                String sql = "INSERT INTO users (first_name, last_name) VALUES (?, ?)";
+                PreparedStatement stmt = conn.prepareStatement(sql);
+                stmt.setString(1, firstName);
+                stmt.setString(2, lastName);
+                int rowsInserted = stmt.executeUpdate();
+
+                if (rowsInserted > 0) {
+                        context.getLogger().info("User inserted successfully.");
+                } else {
+                        context.getLogger().warning("User insert failed.");
+                }
+                } catch (SQLException e) {
+                context.getLogger().severe("Database error: " + e.getMessage());
+                String errorResponse = "{\"StatusCode\":-1,\"Message\":\"Database Error\"}";
+                return request.createResponseBuilder(HttpStatus.INTERNAL_SERVER_ERROR)
+                        .header("Content-Type", "application/json")
+                        .body(errorResponse)
+                        .build();
+        }
 
             String successResponse = "{"
                     + "\"firstname\":\"" + firstName + "\","
@@ -69,5 +103,6 @@ public class Function {
                     .body(errorResponse)
                     .build();
         }
+        
     }
 }
