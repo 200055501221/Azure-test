@@ -27,7 +27,7 @@ public void testHttpTriggerJava() throws Exception {
     final Optional<String> requestBody = Optional.of(jsonBody);
     doReturn(requestBody).when(req).getBody();
 
-    doReturn(HttpMethod.POST).when(req).getHttpMethod();  // 👈 added this line
+    doReturn(HttpMethod.POST).when(req).getHttpMethod();  
 
     final Map<String, String> queryParams = new HashMap<>();
     doReturn(queryParams).when(req).getQueryParameters();
@@ -58,7 +58,7 @@ public void testHttpTriggerJavaWithMissingBody() throws Exception {
     final Optional<String> requestBody = Optional.empty();
     doReturn(requestBody).when(req).getBody();
 
-    doReturn(HttpMethod.POST).when(req).getHttpMethod();  // 👈 added this line
+    doReturn(HttpMethod.POST).when(req).getHttpMethod(); 
 
     final Map<String, String> queryParams = new HashMap<>();
     doReturn(queryParams).when(req).getQueryParameters();
@@ -90,7 +90,7 @@ public void testHttpTriggerJavaWithInvalidJson() throws Exception {
     final Optional<String> requestBody = Optional.of(invalidJsonBody);
     doReturn(requestBody).when(req).getBody();
 
-    doReturn(HttpMethod.POST).when(req).getHttpMethod();  // 👈 added this line
+    doReturn(HttpMethod.POST).when(req).getHttpMethod();  
 
     final Map<String, String> queryParams = new HashMap<>();
     doReturn(queryParams).when(req).getQueryParameters();
@@ -122,7 +122,7 @@ public void testHttpTriggerJavaWithMissingFields() throws Exception {
     final Optional<String> requestBody = Optional.of(jsonBody);
     doReturn(requestBody).when(req).getBody();
 
-    doReturn(HttpMethod.POST).when(req).getHttpMethod();  // 👈 added this line
+    doReturn(HttpMethod.POST).when(req).getHttpMethod(); 
 
     final Map<String, String> queryParams = new HashMap<>();
     doReturn(queryParams).when(req).getQueryParameters();
