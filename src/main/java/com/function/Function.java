@@ -121,18 +121,19 @@ public class Function {
     }
 
     private HttpResponseMessage successResponse(HttpRequestMessage<Optional<String>> request, String message) {
-        String response = "{\"StatusCode\":0,\"Message\":\"" + message + "\"}";
+        ResponseEntity responseEntity = new ResponseEntity(0, message);
         return request.createResponseBuilder(HttpStatus.OK)
                 .header("Content-Type", "application/json")
-                .body(response)
+                .body(responseEntity)
                 .build();
     }
 
     private HttpResponseMessage errorResponse(HttpRequestMessage<Optional<String>> request, String message) {
-        String response = "{\"StatusCode\":-1,\"Message\":\"" + message + "\"}";
+        ResponseEntity responseEntity = new ResponseEntity(-1, message);
         return request.createResponseBuilder(HttpStatus.BAD_REQUEST)
                 .header("Content-Type", "application/json")
-                .body(response)
+                .body(responseEntity)
                 .build();
     }
+
 }
